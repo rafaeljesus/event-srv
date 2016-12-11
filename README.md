@@ -12,12 +12,14 @@ export TRACE_SRV_DB=http://@docker:9200
 export TRACE_SRV_BUS=localhost:9093
 ```
 
+```sh
 mkdir -p $GOPATH/src/github.com/rafaeljesus
 cd $GOPATH/src/github.com/rafaeljesus
 git clone https://github.com/rafaeljesus/trace-srv.git
 cd trace-srv
 glide install
 go build
+
 
 ## Running server
 ```
