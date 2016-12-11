@@ -9,14 +9,10 @@ import (
 func (env *Env) EventCreated(message []byte) {
 	event := &models.Event{}
 	if err := json.Unmarshal(message, &event); err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Failed to decode message!")
+		log.WithError(err).Error("Failed to decode message!")
 	}
 
 	if err := env.Repo.CreateEvent(event); err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Failed to insert event!")
+		log.WithError(err).Error("Failed to insert event!")
 	}
 }

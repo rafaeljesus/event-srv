@@ -22,16 +22,12 @@ func main() {
 
 	db, err := models.NewDB(viper.GetString(trace_srv_db))
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Fatal("Failed to init database connection!")
+		log.WithError(err).Fatal("Failed to init database connection!")
 	}
 
 	event_bus, err := event_bus.NewEventBus(viper.GetString(trace_srv_bus))
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Fatal("Failed to init event bus!")
+		log.WithError(err).Fatal("Failed to init event bus!")
 	}
 
 	env := &handlers.Env{db, event_bus}

@@ -37,9 +37,7 @@ func (bus *EventBus) Emit(topic string, payload interface{}) error {
 	}
 
 	if _, _, err := bus.Emitter.SendMessage(message); err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Failed to emit message!")
+		log.WithError(err).Error("Failed to emit message!")
 		return err
 	}
 

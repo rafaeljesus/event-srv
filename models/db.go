@@ -20,9 +20,7 @@ func NewDB(dbUrl string) (*DB, error) {
 
 	_, err = conn.CreateIndex("events").Do(context.Background())
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Failed to create index!")
+		log.WithError(err).Error("Failed to create index!")
 	}
 
 	return &DB{conn}, nil
