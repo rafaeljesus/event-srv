@@ -7,5 +7,5 @@ import (
 
 type Env struct {
 	Repo     models.Repo
-	EventBus event_bus.EventBus
+	EventBus *event_bus.EventBus
 }

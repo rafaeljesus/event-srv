@@ -20,7 +20,7 @@ const (
 func main() {
 	viper.AutomaticEnv()
 
-	db, err := models.newDB(viper.GetString(trace_srv_db))
+	db, err := models.NewDB(viper.GetString(trace_srv_db))
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error": err,
@@ -34,9 +34,9 @@ func main() {
 		}).Fatal("Failed to init event bus!")
 	}
 
-	event_bus.On("events", handlers.EventCreated)
-
 	env := &handlers.Env{db, event_bus}
+
+	event_bus.On("events", env.EventCreated)
 
 	e := echo.New()
 	e.Use(middleware.Logger())
