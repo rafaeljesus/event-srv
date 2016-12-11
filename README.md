@@ -25,7 +25,7 @@ go build
 # => Starting Trace Service at port 3000
 ```
 
-### Trace a Event
+### Trace a Event through HTTP
 - Request
 ```bash
 curl -X POST -H "Content-Type: application/json" \
