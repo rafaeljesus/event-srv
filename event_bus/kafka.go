@@ -3,7 +3,7 @@ package event_bus
 import (
 	"encoding/json"
 	"github.com/Shopify/sarama"
-	"log"
+	log "github.com/Sirupsen/logrus"
 )
 
 type EventBus struct {
@@ -37,7 +37,9 @@ func (bus *EventBus) Emit(topic string, payload interface{}) error {
 	}
 
 	if _, _, err := bus.Emitter.SendMessage(message); err != nil {
-		log.Fatalln("Failed to produce message", err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Error("Failed to emit message!")
 		return err
 	}
 

@@ -2,17 +2,21 @@ package handlers
 
 import (
 	"encoding/json"
+	log "github.com/Sirupsen/logrus"
 	"github.com/rafaeljesus/trace-srv/models"
-	"log"
 )
 
 func (env *Env) EventCreated(message []byte) {
 	event := &models.Event{}
 	if err := json.Unmarshal(message, &event); err != nil {
-		log.Fatalln("Failed to parse message", err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Error("Failed to decode message!")
 	}
 
 	if err := env.Repo.CreateEvent(event); err != nil {
-		log.Fatalln("Failed to insert event", err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Error("Failed to insert event!")
 	}
 }

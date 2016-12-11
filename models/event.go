@@ -1,8 +1,9 @@
 package models
 
 import (
+	"context"
 	"encoding/json"
-	client "gopkg.in/olivere/elastic.v3"
+	client "gopkg.in/olivere/elastic.v5"
 	"time"
 )
 
@@ -19,8 +20,8 @@ func (repo *DB) CreateEvent(e *Event) error {
 		Index("events").
 		Type("event").
 		BodyJson(e).
-		Refresh(true).
-		Do()
+		Refresh("true").
+		Do(context.Background())
 
 	if err != nil {
 		return err
@@ -48,10 +49,10 @@ func (repo *DB) SearchEvents(q *Query, events *[]Event) error {
 	}
 
 	searchResult, err := index.
-		Sort("timestamp", true).
+		Sort("created_at", true).
 		From(0).Size(10).
 		Pretty(true).
-		Do()
+		Do(context.Background())
 
 	if err != nil {
 		return err

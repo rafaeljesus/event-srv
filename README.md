@@ -12,22 +12,32 @@ export TRACE_SRV_DB=http://@docker:9200
 export TRACE_SRV_BUS=localhost:9093
 ```
 
-## Stack
-- Golang
-- Elastic Search
-- Kafka
-- Docker
+mkdir -p $GOPATH/src/github.com/rafaeljesus
+cd $GOPATH/src/github.com/rafaeljesus
+git clone https://github.com/rafaeljesus/trace-srv.git
+cd trace-srv
+glide install
+go build
 
-## Docker
-This repository has automated image builds on hub.docker.com after successfully building and testing. See the `deployment` section of [circle.yml](circle.yml) for details on how this is done. Note that three environment variables need to be set on CircleCI for the deployment to work:
+## Running server
+```
+./trace-srv
+# => Starting Trace Service at port 3000
+```
 
-  * DOCKER_EMAIL - The email address associated with the user with push access to the Docker Hub repository
-  * DOCKER_USER - Docker Hub username
-  * DOCKER_PASS - Docker Hub password (these are all stored encrypted on CircleCI, and you can create a deployment user with limited permission on Docker Hub if you like)
-
+### Trace a Event
+- Request
 ```bash
-$ sh buid-container
-$ docker run -it -t -p 3000:3000 --name event-tracker rafaeljesus/event-tracker
+curl -X POST -H "Content-Type: application/json" \
+-d '{"name": "order_created", "status": "success", "payload": {}}' \
+localhost:3000/v1/events
+```
+
+- Response
+```json
+{
+  "ok": true
+}
 ```
 
 ## Contributing
@@ -39,9 +49,9 @@ $ docker run -it -t -p 3000:3000 --name event-tracker rafaeljesus/event-tracker
 
 ## Badges
 
-[![CircleCI](https://circleci.com/gh/rafaeljesus/event-tracker.svg?style=svg)](https://circleci.com/gh/rafaeljesus/event-tracker)
-[![](https://images.microbadger.com/badges/image/rafaeljesus/event-tracker.svg)](https://microbadger.com/images/rafaeljesus/event-tracker "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/rafaeljesus/event-tracker.svg)](https://microbadger.com/images/rafaeljesus/event-tracker "Get your own version badge on microbadger.com")
+[![CircleCI](https://circleci.com/gh/rafaeljesus/trace-srv.svg?style=svg)](https://circleci.com/gh/rafaeljesus/trace-srv)
+[![](https://images.microbadger.com/badges/image/rafaeljesus/trace-srv.svg)](https://microbadger.com/images/rafaeljesus/trace-srv "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/rafaeljesus/trace-srv.svg)](https://microbadger.com/images/rafaeljesus/trace-srv "Get your own version badge on microbadger.com")
 
 ---
 

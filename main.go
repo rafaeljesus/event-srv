@@ -47,6 +47,9 @@ func main() {
 	r.GET("/events", env.EventsIndex)
 	r.POST("/events", env.EventsCreate)
 
-	log.Print("Server starting...")
+	log.WithFields(log.Fields{
+		"port": viper.GetString(trace_srv_port),
+	}).Info("Starting Trace Service")
+
 	e.Run(fasthttp.New(":" + viper.GetString(trace_srv_port)))
 }

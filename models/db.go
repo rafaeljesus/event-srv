@@ -1,8 +1,9 @@
 package models
 
 import (
-	"gopkg.in/olivere/elastic.v3"
-	"log"
+	"context"
+	log "github.com/Sirupsen/logrus"
+	"gopkg.in/olivere/elastic.v5"
 )
 
 type DB struct {
@@ -12,15 +13,17 @@ type DB struct {
 func NewDB(dbUrl string) (*DB, error) {
 	url := elastic.SetURL(dbUrl)
 	sniff := elastic.SetSniff(false)
-	client, err := elastic.NewClient(sniff, url)
+	conn, err := elastic.NewClient(sniff, url)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	_, err = client.CreateIndex("events").Do()
+	_, err = conn.CreateIndex("events").Do(context.Background())
 	if err != nil {
-		log.Print(err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Error("Failed to create index!")
 	}
 
-	return &DB{client}, nil
+	return &DB{conn}, nil
 }
