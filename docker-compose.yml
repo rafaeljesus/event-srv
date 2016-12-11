@@ -1,0 +1,46 @@
+version: "2"
+services:
+  eventtracker:
+    container_name: trace_srv
+    build: .
+    command: trace-srv
+    environment:
+      TRACE_SRV_PORT: 3000
+      TRACE_SRV_DB: "http://@docker:9200"
+      TRACE_SRV_BUS: "localhost:9093"
+
+    ports:
+      - "3000:3000"
+    links:
+      - elasticsearch
+      - kafka
+
+  elasticsearch:
+    container_name: dev_elasticsearch
+    image: elasticsearch:1.4.2
+    ports:
+      - "9200:9200"
+    volumes:
+      - /Users/rafaeljesus/mnt/sda1/data/elasticsearch:/usr/share/elasticsearch/data
+
+  kafka:
+    container_name: dev_kafka
+    image: wurstmeister/kafka
+    hostname: kafka
+    environment:
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    ports:
+      - "9093:9092"
+    links:
+      - zookeeper:zk
+
+  zookeeper:
+    container_name: dev_zookeeper
+    image: oddpoet/zookeeper
+    hostname: zookeeper
+    command:
+      - "2181"
+    ports:
+      - "2181:2181"

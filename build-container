@@ -1,0 +1,2 @@
+bash build
+docker build --no-cache --rm -t rafaeljesus/trace-srv .
