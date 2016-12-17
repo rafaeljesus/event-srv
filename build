@@ -1,2 +1,2 @@
-rm -rf trace-srv
-CGO_ENABLED=0 GOOS=linux go build -a --ldflags '-extldflags "-static"' -tags netgo -installsuffix netgo -o trace-srv .
+rm -rf event-srv
+CGO_ENABLED=0 GOOS=linux go build -a --ldflags '-extldflags "-static"' -tags netgo -installsuffix netgo -o event-srv .

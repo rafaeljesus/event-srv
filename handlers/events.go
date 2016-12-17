@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/labstack/echo"
-	"github.com/rafaeljesus/trace-srv/models"
+	"github.com/rafaeljesus/event-srv/models"
 	"net/http"
 )
 

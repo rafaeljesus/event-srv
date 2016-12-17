@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	log "github.com/Sirupsen/logrus"
-	"github.com/rafaeljesus/trace-srv/models"
+	"github.com/rafaeljesus/event-srv/models"
 )
 
 func (env *Env) EventCreated(message []byte) {

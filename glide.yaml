@@ -1,4 +1,4 @@
-package: github.com/rafaeljesus/trace-srv
+package: github.com/rafaeljesus/event-srv
 import:
 - package: github.com/Shopify/sarama
   version: v1.10.1

@@ -1,13 +1,13 @@
 version: "2"
 services:
   eventtracker:
-    container_name: trace_srv
+    container_name: event_srv
     build: .
-    command: trace-srv
+    command: event-srv
     environment:
-      TRACE_SRV_PORT: 3000
-      TRACE_SRV_DB: "http://@docker:9200"
-      TRACE_SRV_BUS: "localhost:9093"
+      EVENT_SRV_PORT: 3000
+      EVENT_SRV_DB: "http://@docker:9200"
+      EVENT_SRV_BUS: "localhost:9093"
 
     ports:
       - "3000:3000"

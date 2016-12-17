@@ -1,34 +1,35 @@
-## Trace Srv
+## Event Srv
 
-* Record any actions your system perform, along with any properties that describe the action
+* An event aggregation service for microservices
+* Build with Go and Elastic Search
 * A minimal docker container
 * Automatically pushes it to dockerhub if tests pass
 
 ## Setup
 Env vars
 ```bash
-export TRACE_SRV_PORT=3000
-export TRACE_SRV_DB=http://@docker:9200
-export TRACE_SRV_BUS=localhost:9093
+export EVENT_SRV_PORT=3000
+export EVENT_SRV_DB=http://@docker:9200
+export EVENT_SRV_BUS=localhost:9093
 ```
 
 Installation
 ```sh
 mkdir -p $GOPATH/src/github.com/rafaeljesus
 cd $GOPATH/src/github.com/rafaeljesus
-git clone https://github.com/rafaeljesus/trace-srv.git
-cd trace-srv
+git clone https://github.com/rafaeljesus/event-srv.git
+cd event-srv
 glide install
 go build
 ```
 
 ## Running server
 ```
-./trace-srv
-# => Starting Trace Service at port 3000
+./event-srv
+# => Starting Event Service at port 3000
 ```
 
-### Trace a Event through HTTP
+### Create a Event through HTTP
 - Request
 ```bash
 curl -X POST -H "Content-Type: application/json" \
@@ -52,9 +53,9 @@ localhost:3000/v1/events
 
 ## Badges
 
-[![CircleCI](https://circleci.com/gh/rafaeljesus/trace-srv.svg?style=svg)](https://circleci.com/gh/rafaeljesus/trace-srv)
-[![](https://images.microbadger.com/badges/image/rafaeljesus/trace-srv.svg)](https://microbadger.com/images/rafaeljesus/trace-srv "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/rafaeljesus/trace-srv.svg)](https://microbadger.com/images/rafaeljesus/trace-srv "Get your own version badge on microbadger.com")
+[![CircleCI](https://circleci.com/gh/rafaeljesus/event-srv.svg?style=svg)](https://circleci.com/gh/rafaeljesus/event-srv)
+[![](https://images.microbadger.com/badges/image/rafaeljesus/event-srv.svg)](https://microbadger.com/images/rafaeljesus/event-srv "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/rafaeljesus/event-srv.svg)](https://microbadger.com/images/rafaeljesus/event-srv "Get your own version badge on microbadger.com")
 
 ---
 

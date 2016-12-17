@@ -1,7 +1,7 @@
 machine:
   environment:
     IMPORT_PATH: "/home/ubuntu/.go_workspace/src/github.com/rafaeljesus"
-    APP_PATH: "$IMPORT_PATH/trace-srv"
+    APP_PATH: "$IMPORT_PATH/event-srv"
   pre:
     - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   services:
@@ -30,7 +30,7 @@ deployment:
     branch: master
     commands:
       - cd "$APP_PATH" && sh build
-      - docker build -t rafaeljesus/trace-srv .
+      - docker build -t rafaeljesus/event-srv .
       - docker login -e $DOCKERHUB_EMAIL -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
-      - docker tag rafaeljesus/trace-srv rafaeljesus/trace-srv:master
-      - docker push rafaeljesus/trace-srv:master
+      - docker tag rafaeljesus/event-srv rafaeljesus/event-srv:master
+      - docker push rafaeljesus/event-srv:master

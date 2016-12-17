@@ -5,27 +5,27 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/fasthttp"
 	"github.com/labstack/echo/middleware"
-	"github.com/rafaeljesus/trace-srv/event_bus"
-	"github.com/rafaeljesus/trace-srv/handlers"
-	"github.com/rafaeljesus/trace-srv/models"
+	"github.com/rafaeljesus/event-srv/event_bus"
+	"github.com/rafaeljesus/event-srv/handlers"
+	"github.com/rafaeljesus/event-srv/models"
 	"github.com/spf13/viper"
 )
 
 const (
-	trace_srv_db   = "TRACE_SRV_DB"
-	trace_srv_port = "TRACE_SRV_PORT"
-	trace_srv_bus  = "TRACE_SRV_BUS"
+	event_srv_db   = "EVENT_SRV_DB"
+	event_srv_port = "EVENT_SRV_PORT"
+	event_srv_bus  = "EVENT_SRV_BUS"
 )
 
 func main() {
 	viper.AutomaticEnv()
 
-	db, err := models.NewDB(viper.GetString(trace_srv_db))
+	db, err := models.NewDB(viper.GetString(event_srv_db))
 	if err != nil {
 		log.WithError(err).Fatal("Failed to init database connection!")
 	}
 
-	event_bus, err := event_bus.NewEventBus(viper.GetString(trace_srv_bus))
+	event_bus, err := event_bus.NewEventBus(viper.GetString(event_srv_bus))
 	if err != nil {
 		log.WithError(err).Fatal("Failed to init event bus!")
 	}
@@ -43,9 +43,7 @@ func main() {
 	r.GET("/events", env.EventsIndex)
 	r.POST("/events", env.EventsCreate)
 
-	log.WithFields(log.Fields{
-		"port": viper.GetString(trace_srv_port),
-	}).Info("Starting Trace Service")
+	log.WithField("port", viper.GetString(event_srv_port)).Info("Starting event Service")
 
-	e.Run(fasthttp.New(":" + viper.GetString(trace_srv_port)))
+	e.Run(fasthttp.New(":" + viper.GetString(event_srv_port)))
 }

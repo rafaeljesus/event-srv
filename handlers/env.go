@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/rafaeljesus/trace-srv/event_bus"
-	"github.com/rafaeljesus/trace-srv/models"
+	"github.com/rafaeljesus/event-srv/event_bus"
+	"github.com/rafaeljesus/event-srv/models"
 )
 
 type Env struct {

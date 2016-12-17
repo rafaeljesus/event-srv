@@ -1,2 +1,2 @@
 bash build
-docker build --no-cache --rm -t rafaeljesus/trace-srv .
+docker build --no-cache --rm -t rafaeljesus/event-srv .
