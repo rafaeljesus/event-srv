@@ -67,7 +67,7 @@ func (bus *EventBus) On(topic string, fn func([]byte)) error {
 	for _, partition := range partitions {
 		pc, err := bus.Listener.ConsumePartition(topic, partition, sarama.OffsetOldest)
 		if err != nil {
-			return nil
+			return err
 		}
 
 		go func(pc sarama.PartitionConsumer) {
