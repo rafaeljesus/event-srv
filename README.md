@@ -1,7 +1,7 @@
 ## Event Srv
 
 * An event aggregation service for microservices
-* Build with Go and Elastic Search
+* Build with Go, Elastic Search and Kafka
 * A minimal docker container
 * Automatically pushes it to dockerhub if tests pass
 
