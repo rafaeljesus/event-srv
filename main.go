@@ -25,14 +25,14 @@ func main() {
 		log.WithError(err).Fatal("Failed to init database connection!")
 	}
 
-	event_bus, err := event_bus.NewEventBus(viper.GetString(event_srv_bus))
+	eventBus, err := eventBus.NewEventBus(viper.GetString(event_srv_bus))
 	if err != nil {
 		log.WithError(err).Fatal("Failed to init event bus!")
 	}
 
-	env := &handlers.Env{db, event_bus}
+	env := &handlers.Env{db, eventBus}
 
-	if err := event_bus.On("events", env.EventCreated); err != nil {
+	if err := eventBus.On("events", env.EventCreated); err != nil {
 		log.WithError(err).Fatal("Failed to listen for events topic!")
 	}
 
