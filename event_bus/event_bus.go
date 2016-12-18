@@ -1,10 +1,15 @@
-package event_bus
+package eventBus
 
 import (
 	"encoding/json"
 	"github.com/Shopify/sarama"
 	log "github.com/Sirupsen/logrus"
 )
+
+type Bus interface {
+	Emit(string, interface{}) error
+	On(string, func([]byte)) error
+}
 
 type EventBus struct {
 	Emitter  sarama.AsyncProducer
