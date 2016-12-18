@@ -32,7 +32,9 @@ func main() {
 
 	env := &handlers.Env{db, event_bus}
 
-	event_bus.On("events", env.EventCreated)
+	if err := event_bus.On("events", env.EventCreated); err != nil {
+		log.WithError(err).Fatal("Failed to listen for events topic!")
+	}
 
 	e := echo.New()
 	e.Use(middleware.Logger())

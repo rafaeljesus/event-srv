@@ -26,7 +26,7 @@ func (env *Env) EventsCreate(c echo.Context) error {
 		return err
 	}
 
-	if err := env.EventBus.Emit("event.created", event); err != nil {
+	if err := env.EventBus.Emit("events", event); err != nil {
 		return err
 	}
 
