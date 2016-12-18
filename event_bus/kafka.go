@@ -41,8 +41,9 @@ func (bus *EventBus) Emit(topic string, payload interface{}) error {
 	}
 
 	message := &sarama.ProducerMessage{
-		Topic: topic,
-		Value: sarama.StringEncoder(msg),
+		Topic:     topic,
+		Partition: -1,
+		Value:     sarama.StringEncoder(msg),
 	}
 
 	for {
@@ -70,7 +71,7 @@ func (bus *EventBus) On(topic string, fn func([]byte)) error {
 			return err
 		}
 
-		go func(pc sarama.PartitionConsumer) {
+		go func() {
 			for {
 				select {
 				case message := <-pc.Messages():
@@ -80,7 +81,7 @@ func (bus *EventBus) On(topic string, fn func([]byte)) error {
 					log.WithError(err).Error("Failed to consume message!")
 				}
 			}
-		}(pc)
+		}()
 	}
 
 	return nil
