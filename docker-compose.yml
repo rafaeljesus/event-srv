@@ -1,6 +1,6 @@
 version: "2"
 services:
-  eventtracker:
+  event_srv:
     container_name: event_srv
     build: .
     command: event-srv
@@ -21,7 +21,7 @@ services:
     ports:
       - "9200:9200"
     volumes:
-      - /Users/rafaeljesus/mnt/sda1/data/elasticsearch:/usr/share/elasticsearch/data
+      - /var/run/docker.sock:/var/run/docker.sock
 
   kafka:
     container_name: dev_kafka
@@ -31,6 +31,7 @@ services:
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "events:1:1"
     ports:
       - "9093:9092"
     links:
