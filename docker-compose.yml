@@ -11,7 +11,7 @@ services:
 
     ports:
       - "3000:3000"
-    links:
+    depends_on:
       - elasticsearch
       - kafka
 
@@ -28,14 +28,14 @@ services:
     image: wurstmeister/kafka
     hostname: kafka
     environment:
+      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
       KAFKA_ADVERTISED_PORT: 9092
-      KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "events:1:1"
+      KAFKA_CREATE_TOPICS: "events:1:2:compact"
     ports:
       - "9093:9092"
-    links:
-      - zookeeper:zk
+    depends_on:
+      - zookeeper
 
   zookeeper:
     container_name: dev_zookeeper
