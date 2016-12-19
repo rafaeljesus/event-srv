@@ -54,9 +54,9 @@ func (bus *EventBus) Emit(topic string, payload interface{}) error {
 	for {
 		select {
 		case bus.Emitter.Input() <- message:
-			return nil
 		case <-bus.Emitter.Successes():
 			log.WithField("topic", topic).Info("Message emitted")
+			return nil
 		case err := <-bus.Emitter.Errors():
 			log.WithError(err).Error("Failed to emit message!")
 			return err
