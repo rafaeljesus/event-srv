@@ -1,7 +1,7 @@
 FROM scratch
 MAINTAINER Rafael Jesus <rafaelljesus86@gmail.com>
 
-ADD event-srv /event-srv
+ADD dist/event-srv /dist/event-srv
 
 ENV EVENT_SRV_PORT="3000"
 ENV EVENT_SRV_DB="http://@docker:9200"

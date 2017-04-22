@@ -1,2 +1,2 @@
-bash build
+bash make build
 docker build --no-cache --rm -t rafaeljesus/event-srv .

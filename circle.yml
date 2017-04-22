@@ -23,13 +23,12 @@ dependencies:
 
 test:
   override:
-    - cd "$APP_PATH" && go vet && go test -v -race -cover $(glide nv)
-
+    - cd "$APP_PATH" && make test
 deployment:
   master:
     branch: master
     commands:
-      - cd "$APP_PATH" && sh build
+      - cd "$APP_PATH" && make build
       - docker build -t rafaeljesus/event-srv .
       - docker login -e $DOCKERHUB_EMAIL -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
       - docker tag rafaeljesus/event-srv rafaeljesus/event-srv:master

@@ -1,22 +1,16 @@
 package: github.com/rafaeljesus/event-srv
 import:
 - package: github.com/Shopify/sarama
-  version: v1.10.1
+  version: v1.11.0
 - package: github.com/Sirupsen/logrus
-  version: v0.11.0
-- package: github.com/labstack/echo
-  version: v2.2.0
+  version: v0.11.5
+- package: github.com/kelseyhightower/envconfig
+  version: v1.3.0
+- package: github.com/pressly/chi
+  version: v2.1.0
   subpackages:
-  - engine/fasthttp
   - middleware
+- package: github.com/spf13/cobra
 - package: github.com/spf13/viper
-- package: gopkg.in/olivere/elastic.v3
-  version: v5.0.13
-- package: golang.org/x/net
-  subpackages:
-  - context
-testImport:
-- package: github.com/stretchr/testify
-  version: v1.1.4
-  subpackages:
-  - assert
+- package: gopkg.in/olivere/elastic.v5
+  version: v5.0.35

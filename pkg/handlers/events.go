@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"github.com/labstack/echo"
-	"github.com/rafaeljesus/event-srv/models"
 	"net/http"
+
+	"github.com/rafaeljesus/event-srv/pkg/models"
 )
 
 func (env *Env) EventsIndex(c echo.Context) error {
