@@ -9,8 +9,14 @@ import (
 )
 
 type Emitter interface {
-	Emit(topic string, payload interface{}) error
+	Emit() chan *Message
 	Close()
+}
+
+type Message struct {
+	Topic     string
+	Payload   interface{}
+	Partition int32
 }
 
 type EmitterConfig struct {
@@ -20,7 +26,8 @@ type EmitterConfig struct {
 }
 
 type kafkaEmitter struct {
-	Emitter sarama.AsyncProducer
+	emitter     sarama.AsyncProducer
+	emitterChan chan *Message
 }
 
 func NewEmitter(c EmitterConfig) (emitter Emitter, err error) {
@@ -38,39 +45,57 @@ func NewEmitter(c EmitterConfig) (emitter Emitter, err error) {
 		return
 	}
 
-	emitter = &kafkaEmitter{producer}
+	ke := &kafkaEmitter{
+		emitter:     producer,
+		emitterChan: make(chan *Message),
+	}
+
+	go ke.register()
+
+	emitter = ke
 
 	return
 }
 
-func (e *kafkaEmitter) Emit(topic string, payload interface{}) (err error) {
-	partition := 1<<32 - 1
+func (ke *kafkaEmitter) Emit() chan *Message {
+	return ke.emitterChan
+}
 
+func (ke *kafkaEmitter) register() {
+	for {
+		select {
+		case m := <-ke.emitterChan:
+			ke.emit(m)
+		}
+	}
+}
+
+func (ke *kafkaEmitter) emit(m *Message) (err error) {
 	l := log.WithFields(log.Fields{
-		"topic":     topic,
-		"partition": partition,
+		"topic":     m.Topic,
+		"partition": m.Partition,
 	})
 
 	l.Debug("Sending event")
 
-	p, err := json.Marshal(payload)
+	p, err := json.Marshal(m.Payload)
 	if err != nil {
 		return
 	}
 
 	message := &sarama.ProducerMessage{
-		Topic:     topic,
-		Partition: partition,
+		Topic:     m.Topic,
+		Partition: m.Partition,
 		Value:     sarama.StringEncoder(p),
 	}
 
 	for {
 		select {
-		case e.Emitter.Input() <- message:
-		case <-e.Emitter.Successes():
+		case ke.emitter.Input() <- message:
+		case <-ke.emitter.Successes():
 			l.Info("Event successfully sent")
 			return
-		case errors := <-e.Emitter.Errors():
+		case errors := <-ke.emitter.Errors():
 			l.WithError(err).Error("Failed to send event")
 			err = errors
 			return
@@ -78,6 +103,6 @@ func (e *kafkaEmitter) Emit(topic string, payload interface{}) (err error) {
 	}
 }
 
-func (e *kafkaEmitter) Close() {
-	e.Emitter.Close()
+func (ke *kafkaEmitter) Close() {
+	ke.emitter.Close()
 }

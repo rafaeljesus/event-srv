@@ -3,7 +3,7 @@ package checker
 import (
 	"context"
 
-	"gopkg.in/olivere/elastic.v5"
+	client "gopkg.in/olivere/elastic.v5"
 )
 
 type elastic struct {
@@ -15,16 +15,16 @@ func NewElastic(url string) *elastic {
 }
 
 func (e *elastic) IsAlive() bool {
-	url := elastic.SetURL(e.url)
-	sniff := elastic.SetSniff(false)
-	conn, err = elastic.NewClient(sniff, url)
+	url := client.SetURL(e.url)
+	sniff := client.SetSniff(false)
+	conn, err := client.NewClient(sniff, url)
 	if err != nil {
 		return false
 	}
 
 	defer conn.Stop()
 
-	_, _, err := client.Ping(e.url).Do(context.Background())
+	_, _, err = conn.Ping(e.url).Do(context.Background())
 	if err != nil {
 		return false
 	}

@@ -1,5 +1,5 @@
-hash: 070516e7ee7e626542d6adc09cc35b95843a2366cbfe0c0f71f9ee86b8285346
-updated: 2017-04-22T22:04:00.727470119+02:00
+hash: 2950dfed234a9bc8c471b45c06fb2b3876b1a2fe145c2afdd77d09f2626f6701
+updated: 2017-04-23T11:41:27.395198552+02:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
@@ -65,7 +65,9 @@ imports:
 - name: github.com/spf13/cast
   version: 24b6558033ffe202bf42f0f3b870dcc798dd2ba8
 - name: github.com/spf13/cobra
-  version: 10f6b9d7e1631a54ad07c5c0fb71c28a1abfd3c2
+  version: 5deb57bbca49eb370538fc295ba4b2988f9f5e09
+  subpackages:
+  - pflag
 - name: github.com/spf13/jwalterweatherman
   version: 33c24e77fb80341fe7130ee7c594256ff08ccc46
 - name: github.com/spf13/pflag

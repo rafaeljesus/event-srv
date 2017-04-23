@@ -5,18 +5,20 @@ import (
 )
 
 type EventRepoMock struct {
-	Created      bool
-	Searched     bool
-	ByStatus     bool
-	ByExpression bool
+	Created  bool
+	Found    bool
+	ByUUID   bool
+	ByName   bool
+	ByStatus bool
 }
 
 func NewEventRepo() *EventRepoMock {
 	return &EventRepoMock{
-		Created:      false,
-		Searched:     false,
-		ByStatus:     false,
-		ByExpression: false,
+		Created:  false,
+		Found:    false,
+		ByUUID:   false,
+		ByName:   false,
+		ByStatus: false,
 	}
 }
 
@@ -25,16 +27,18 @@ func (repo *EventRepoMock) Create(event *models.Event) (err error) {
 	return
 }
 
-func (repo *EventRepoMock) Search(sc *models.Query) (events []models.Event, err error) {
-	events = append(events, models.Event{Expression: "* * * * * *"})
+func (repo *EventRepoMock) Find(sc *models.Query) (events []models.Event, err error) {
+	events = append(events, models.Event{UUID: "12kh312uynb2u"})
 
 	switch true {
+	case sc.UUID != "":
+		repo.ByUUID = true
+	case sc.Name != "":
+		repo.ByName = true
 	case sc.Status != "":
 		repo.ByStatus = true
-	case sc.Expression != "":
-		repo.ByExpression = true
 	default:
-		repo.Searched = true
+		repo.Found = true
 	}
 
 	return

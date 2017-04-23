@@ -11,6 +11,9 @@ import:
   subpackages:
   - middleware
 - package: github.com/spf13/cobra
+  version: 5deb57bbca49eb370538fc295ba4b2988f9f5e09
+  subpackages:
+  - pflag
 - package: github.com/spf13/viper
 - package: gopkg.in/olivere/elastic.v5
   version: v5.0.35

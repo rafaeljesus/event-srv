@@ -1,4 +1,4 @@
-package kafka
+package checker
 
 import (
 	"github.com/Shopify/sarama"
@@ -23,7 +23,7 @@ func (k *kafka) IsAlive() bool {
 
 	defer consumer.Close()
 
-	producer, err := sarama.NewProducer(brokers, config)
+	producer, err := sarama.NewSyncProducer(brokers, config)
 	if err != nil {
 		return false
 	}

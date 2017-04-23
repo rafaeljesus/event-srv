@@ -25,8 +25,8 @@ func TestHealthzIndex(t *testing.T) {
 		t.Fail()
 	}
 
-	r := violetear.New()
-	r.HandleFunc("/healthz", h.HealthzIndex, "GET")
+	r := chi.NewRouter()
+	r.Get("/healthz", h.HealthzIndex)
 	r.ServeHTTP(res, req)
 
 	response := make(map[string]bool)

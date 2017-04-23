@@ -1,36 +1,50 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
+	"github.com/rafaeljesus/event-srv/pkg/kafka-bus"
 	"github.com/rafaeljesus/event-srv/pkg/models"
+	"github.com/rafaeljesus/event-srv/pkg/render"
+	"github.com/rafaeljesus/event-srv/pkg/repos"
 )
 
-func (env *Env) EventsIndex(c echo.Context) error {
-	cid := c.QueryParam("cid")
-	name := c.QueryParam("name")
-	status := c.QueryParam("status")
-
-	query := models.NewQuery(cid, name, status)
-	events := []models.Event{}
-	if err := env.Repo.SearchEvents(query, &events); err != nil {
-		return err
-	}
-
-	return c.JSON(http.StatusOK, events)
+type EventsHandler struct {
+	EventRepo repos.EventRepo
+	Emitter   kafkabus.Emitter
 }
 
-func (env *Env) EventsCreate(c echo.Context) error {
-	event := &models.Event{}
-	if err := c.Bind(event); err != nil {
-		return err
+func NewEventsHandler(r repos.EventRepo, e kafkabus.Emitter) *EventsHandler {
+	return &EventsHandler{r, e}
+}
+
+func (h *EventsHandler) EventsIndex(w http.ResponseWriter, r *http.Request) {
+	uuid := r.URL.Query().Get("uuid")
+	name := r.URL.Query().Get("name")
+	status := r.URL.Query().Get("status")
+
+	query := models.NewQuery(uuid, name, status)
+	events, err := h.EventRepo.Find(query)
+	if err != nil {
+		render.JSON(w, http.StatusPreconditionFailed, err)
 	}
 
-	if err := env.EventBus.Emit("events", event); err != nil {
-		return err
+	render.JSON(w, http.StatusOK, events)
+}
+
+func (h *EventsHandler) EventsCreate(w http.ResponseWriter, r *http.Request) {
+	event := new(models.Event)
+	if err := json.NewDecoder(r.Body).Decode(event); err != nil {
+		render.JSON(w, http.StatusBadRequest, "Failed to decode request body")
+		return
 	}
 
-	response := map[string]string{"ok": "true"}
+	h.Emitter.Emit() <- &kafkabus.Message{
+		Topic:     "events",
+		Payload:   event,
+		Partition: -1,
+	}
 
-	return c.JSON(http.StatusAccepted, response)
+	render.JSON(w, http.StatusCreated, "OK")
 }

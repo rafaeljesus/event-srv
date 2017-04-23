@@ -6,7 +6,7 @@ import (
 )
 
 type Event struct {
-	UUID      int              `json:"uuid"`
+	UUID      string           `json:"uuid"`
 	Name      string           `json:"name"`
 	Status    string           `json:"status"`
 	Payload   *json.RawMessage `json:"payload"`
