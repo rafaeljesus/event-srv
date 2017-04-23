@@ -28,7 +28,11 @@ func (repo *EventRepoMock) Create(event *models.Event) (err error) {
 }
 
 func (repo *EventRepoMock) Find(sc *models.Query) (events []models.Event, err error) {
-	events = append(events, models.Event{UUID: "12kh312uynb2u"})
+	events = append(events, models.Event{
+		UUID:   "12kh312uynb2u",
+		Name:   "something_happened",
+		Status: "something_processed",
+	})
 
 	switch true {
 	case sc.UUID != "":

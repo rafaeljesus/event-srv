@@ -3,6 +3,7 @@ package repos
 import (
 	"context"
 	"encoding/json"
+	"strconv"
 
 	"github.com/rafaeljesus/event-srv/pkg/models"
 	"gopkg.in/olivere/elastic.v5"
@@ -35,6 +36,16 @@ func (e *Event) Create(event *models.Event) (err error) {
 func (e *Event) Find(q *models.Query) (events []models.Event, err error) {
 	index := e.db.Search().Index("events")
 
+	from, err := strconv.Atoi(q.From)
+	if err != nil {
+		from = 0
+	}
+
+	size, err := strconv.Atoi(q.Size)
+	if err != nil {
+		size = 10
+	}
+
 	if q.UUID != "" {
 		cid := elastic.NewTermQuery("cid", q.UUID)
 		index.Query(cid)
@@ -52,8 +63,8 @@ func (e *Event) Find(q *models.Query) (events []models.Event, err error) {
 
 	searchResult, err := index.
 		Sort("ocurred_on", true).
-		From(q.From).
-		Size(q.Size).
+		From(from).
+		Size(size).
 		Do(context.Background())
 
 	if err != nil {

@@ -1,8 +1,8 @@
 package models
 
 type Query struct {
-	From   int
-	Size   int
+	From   string
+	Size   string
 	UUID   string
 	Name   string
 	Status string
