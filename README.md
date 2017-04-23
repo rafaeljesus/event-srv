@@ -1,6 +1,6 @@
-## Event Srv
+## Event Service
 
-* An event aggregation service for microservices
+* An event log as a service
 * Build with Go, Elastic Search and Kafka
 * A minimal docker container
 * Automatically pushes it to dockerhub if tests pass
@@ -8,9 +8,9 @@
 ## Setup
 Env vars
 ```bash
-export EVENT_SRV_PORT=3000
-export EVENT_SRV_DB=http://@docker:9200
-export EVENT_SRV_BUS=localhost:9093
+export PORT=3000
+export DATASTORE_URL=http://@docker:9200
+export BROKER_URL=localhost:9093
 ```
 
 Installation
@@ -19,13 +19,12 @@ mkdir -p $GOPATH/src/github.com/rafaeljesus
 cd $GOPATH/src/github.com/rafaeljesus
 git clone https://github.com/rafaeljesus/event-srv.git
 cd event-srv
-glide install
-go build
+make all
 ```
 
 ## Running server
 ```
-./event-srv
+./dist/event-srv
 # => Starting Event Service at port 3000
 ```
 
@@ -34,14 +33,12 @@ go build
 ```bash
 curl -X POST -H "Content-Type: application/json" \
 -d '{"name": "order_created", "status": "success", "payload": {}}' \
-localhost:3000/v1/events
+localhost:3000/events
 ```
 
 - Response
-```json
-{
-  "ok": true
-}
+```
+"OK"
 ```
 
 ## Contributing

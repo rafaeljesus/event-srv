@@ -52,9 +52,8 @@ func (e *Event) Find(q *models.Query) (events []models.Event, err error) {
 
 	searchResult, err := index.
 		Sort("ocurred_on", true).
-		From(0).
-		Size(10).
-		Pretty(true).
+		From(q.From).
+		Size(q.Size).
 		Do(context.Background())
 
 	if err != nil {
