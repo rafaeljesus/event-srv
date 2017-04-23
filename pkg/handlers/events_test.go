@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/pressly/chi"
@@ -59,7 +60,7 @@ func TestEventsIndexByUUID(t *testing.T) {
 		t.Fail()
 	}
 
-	if len(events) == 1 {
+	if len(events) == 0 {
 		t.Fail()
 	}
 
@@ -91,7 +92,7 @@ func TestEventsIndexByName(t *testing.T) {
 		t.Fail()
 	}
 
-	if len(events) == 1 {
+	if len(events) == 0 {
 		t.Fail()
 	}
 
@@ -123,7 +124,7 @@ func TestEventsIndexByStatus(t *testing.T) {
 		t.Fail()
 	}
 
-	if len(events) == 1 {
+	if len(events) == 0 {
 		t.Fail()
 	}
 
@@ -133,5 +134,34 @@ func TestEventsIndexByStatus(t *testing.T) {
 
 	if res.Code != http.StatusOK {
 		t.Errorf("Expected status %d to be equal %d", res.Code, http.StatusOK)
+	}
+}
+
+func TestEventsCreate(t *testing.T) {
+	repoMock := mocks.NewEventRepo()
+	emitterMock := mocks.NewEmitter()
+	h := NewEventsHandler(repoMock, emitterMock)
+
+	res := httptest.NewRecorder()
+	body := strings.NewReader(`{"name":"foo","status":"bar","payload":"some_data"}`)
+	req, err := http.NewRequest("POST", "/events", body)
+	if err != nil {
+		t.Fail()
+	}
+
+	r := chi.NewRouter()
+	r.Post("/events", h.EventsCreate)
+	r.ServeHTTP(res, req)
+
+	if !repoMock.Created {
+		t.Fail()
+	}
+
+	if !emitterMock.Emitted {
+		t.Fail()
+	}
+
+	if res.Code != http.StatusAccepted {
+		t.Errorf("Expected status %d to be equal %d", res.Code, http.StatusAccepted)
 	}
 }

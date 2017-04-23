@@ -48,5 +48,5 @@ func (h *EventsHandler) EventsCreate(w http.ResponseWriter, r *http.Request) {
 		Partition: -1,
 	}
 
-	render.JSON(w, http.StatusCreated, "OK")
+	render.JSON(w, http.StatusAccepted, "OK")
 }

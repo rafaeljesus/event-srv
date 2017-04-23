@@ -37,13 +37,15 @@ func (repo *EventRepoMock) Find(sc *models.Query) (events []models.Event, err er
 	switch true {
 	case sc.UUID != "":
 		repo.ByUUID = true
+		return
 	case sc.Name != "":
 		repo.ByName = true
+		return
 	case sc.Status != "":
 		repo.ByStatus = true
+		return
 	default:
 		repo.Found = true
+		return
 	}
-
-	return
 }
