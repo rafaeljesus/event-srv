@@ -25,7 +25,6 @@ func (h *EventsHandler) EventsIndex(w http.ResponseWriter, r *http.Request) {
 	uuid := r.URL.Query().Get("uuid")
 	name := r.URL.Query().Get("name")
 	status := r.URL.Query().Get("status")
-
 	query := &models.Query{from, size, uuid, name, status}
 	events, err := h.EventRepo.Find(query)
 	if err != nil {
