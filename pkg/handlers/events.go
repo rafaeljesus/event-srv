@@ -29,6 +29,7 @@ func (h *EventsHandler) EventsIndex(w http.ResponseWriter, r *http.Request) {
 	events, err := h.EventRepo.Find(query)
 	if err != nil {
 		render.JSON(w, http.StatusPreconditionFailed, err)
+		return
 	}
 
 	render.JSON(w, http.StatusOK, events)

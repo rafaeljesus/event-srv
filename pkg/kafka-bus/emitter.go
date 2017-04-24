@@ -2,7 +2,6 @@ package kafkabus
 
 import (
 	"encoding/json"
-	"time"
 
 	"github.com/Shopify/sarama"
 	log "github.com/Sirupsen/logrus"
@@ -13,27 +12,14 @@ type Emitter interface {
 	Close()
 }
 
-type Message struct {
-	Topic     string
-	Payload   interface{}
-	Partition int32
-}
-
-type EmitterConfig struct {
-	Url      string
-	Attempts int
-	Timeout  time.Duration
-}
-
 type kafkaEmitter struct {
 	emitter     sarama.AsyncProducer
 	emitterChan chan *Message
 }
 
-func NewEmitter(c EmitterConfig) (emitter Emitter, err error) {
+func NewEmitter(c Config) (emitter Emitter, err error) {
 	brokers := []string{c.Url}
 	config := sarama.NewConfig()
-	config.Consumer.Return.Errors = true
 	config.Producer.Retry.Max = c.Attempts
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.RequiredAcks = sarama.WaitForAll

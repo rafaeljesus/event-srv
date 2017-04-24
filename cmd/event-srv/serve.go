@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/pressly/chi"
@@ -31,13 +32,22 @@ func Serve(cmd *cobra.Command, args []string) {
 	failOnError(err, "Failed to init dababase connection!")
 	defer ds.Close()
 
-	e, err := kafkabus.NewEmitter(kafkabus.EmitterConfig{
+	e, err := kafkabus.NewEmitter(kafkabus.Config{
 		Url:      globalConfig.BrokerURL,
 		Attempts: globalConfig.ProducerAttempts,
 		Timeout:  globalConfig.ProducerTimeout,
 	})
-	failOnError(err, "Failed to init kafka connection!")
+	failOnError(err, "Failed to init kafka emitter connection!")
 	defer e.Close()
+
+	l, err := kafkabus.NewListener(kafkabus.Config{
+		Url: globalConfig.BrokerURL,
+	})
+	failOnError(err, "Failed to init kafka listener connection!")
+	defer l.Close()
+
+	err := l.On("events", -1, listeners.EventCreated)
+	failOnError(err, "Failed to init event created listener!")
 
 	checkers := map[string]checker.Checker{
 		"api":     checker.NewApi(),
@@ -53,7 +63,7 @@ func Serve(cmd *cobra.Command, args []string) {
 	r.Use(middleware.RequestLogger(&m.LoggerRequest{}))
 	r.Use(middleware.Recoverer)
 
-	r.Get("/status", statusHandler.StatusIndex)
+	r.Get("/healthz", statusHandler.HealthzIndex)
 
 	r.Route("/events", func(r chi.Router) {
 		r.Get("/", eventsHandler.EventIndex)
